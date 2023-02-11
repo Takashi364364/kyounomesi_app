@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300&display=swap');
+
+.title-font {
+  font-family: 'Mochiy Pop One', sans-serif;
+}
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+}
