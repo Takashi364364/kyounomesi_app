@@ -98,7 +98,7 @@ const Post: React.FC<PROPS> = (props) => {
 
   //投稿を削除
   const deletePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const postDocumentRef = doc(db, "posts", props.postId);
+    const postDocumentRef = doc(db, "posts", props.postId, "comments");
     await deleteDoc(postDocumentRef);
   };
 
