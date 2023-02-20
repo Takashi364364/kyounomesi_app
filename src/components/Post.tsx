@@ -130,10 +130,14 @@ const Post: React.FC<PROPS> = (props) => {
               alt={"food"}
               onClick={onOpen}
             />
-            <Modal isOpen={isOpen} onClose={onClose} size={"3xl"}>
+            <Modal
+              isOpen={isOpen}
+              onClose={onClose}
+              size={{ base: "md", md: "lg" }}
+            >
               {/* 画像モーダル */}
               <ModalOverlay>
-                <ModalContent top={{ base: "40", md: "20" }}>
+                <ModalContent>
                   <Image src={props.image} />
                 </ModalContent>
               </ModalOverlay>

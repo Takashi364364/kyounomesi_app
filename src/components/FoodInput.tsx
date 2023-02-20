@@ -101,7 +101,12 @@ const FoodInput: React.FC = () => {
               bg={"green.200"}
               aria-label="Input_image"
               onClick={onClickButton}
-              icon={<MdAddAPhoto color={"#3182CE"} size={"35"} />}
+              icon={
+                <MdAddAPhoto
+                  color={foodImage ? "#65686E" : "#3182CE"}
+                  size={"35"}
+                />
+              }
             />
           </Box>
           <Button
