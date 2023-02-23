@@ -9,7 +9,9 @@ import {
   Image,
   Input,
   Modal,
+  ModalBody,
   ModalContent,
+  ModalHeader,
   ModalOverlay,
   Stack,
   useDisclosure,
@@ -49,7 +51,16 @@ interface COMMENT {
 const Post: React.FC<PROPS> = (props) => {
   const user = useSelector(selectUser);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isImageModalOpen,
+    onOpen: onImageModalOpen,
+    onClose: onImageModalClose,
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteModalOpen,
+    onOpen: onDeleteModalOpen,
+    onClose: onDeleteModalClose,
+  } = useDisclosure();
   const [openComments, setOpenComments] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<COMMENT[]>([
@@ -98,7 +109,8 @@ const Post: React.FC<PROPS> = (props) => {
 
   //投稿を削除
   const deletePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const postDocumentRef = doc(db, "posts", props.postId, "comments");
+    const postDocumentRef = doc(db, "posts", props.postId);
+
     await deleteDoc(postDocumentRef);
   };
 
@@ -106,14 +118,48 @@ const Post: React.FC<PROPS> = (props) => {
     <Stack bg={"#EBEBF1"}>
       <HStack key={props.postId} pt={"10"} justify={"center"}>
         <Avatar src={props.avatar} /> {/* アバターアイコン */}
-        <Box>@{props.username}</Box> {/* ユーザー名 */}
-        <Box>{new Date(props.timestamp?.toDate()).toLocaleString()}</Box>{" "}
-        {/* 投稿日時 */}
+        <HStack display={{ base: "inline-block", md: "flex" }}>
+          <Box>@{props.username}</Box> {/* ユーザー名 */}
+          <Box pt={{ base: "3px", md: "0" }}>
+            {new Date(props.timestamp?.toDate()).toLocaleString()}
+          </Box>
+          {/* 投稿日時 */}
+        </HStack>
         {/* ログインユーザーと投稿ユーザーが一致すれば削除 */}
         {user.displayName === props.username ? (
-          <Button size={"sm"} colorScheme={"blue"} onClick={deletePost}>
-            削除
-          </Button>
+          <>
+            <Button
+              size={"sm"}
+              colorScheme={"blue"}
+              onClick={onDeleteModalOpen}
+            >
+              削除
+            </Button>
+            {/* 削除確認用モーダル */}
+            <Modal isOpen={isDeleteModalOpen} onClose={onDeleteModalClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>削除しますか？</ModalHeader>
+                <ModalBody>
+                  <Button
+                    colorScheme={"gray"}
+                    mr={3}
+                    boxShadow={"md"}
+                    onClick={onDeleteModalClose}
+                  >
+                    やめる
+                  </Button>
+                  <Button
+                    colorScheme={"blue"}
+                    boxShadow={"lg"}
+                    onClick={deletePost}
+                  >
+                    削除する
+                  </Button>
+                </ModalBody>
+              </ModalContent>
+            </Modal>
+          </>
         ) : null}
       </HStack>
       <VStack>
@@ -128,11 +174,11 @@ const Post: React.FC<PROPS> = (props) => {
               w={"500"}
               src={props.image}
               alt={"food"}
-              onClick={onOpen}
+              onClick={onImageModalOpen}
             />
             <Modal
-              isOpen={isOpen}
-              onClose={onClose}
+              isOpen={isImageModalOpen}
+              onClose={onImageModalClose}
               size={{ base: "md", md: "lg" }}
             >
               {/* 画像モーダル */}
